@@ -37,7 +37,7 @@ export class AuthController {
     console.log(req.user);
   }
 
-  @Get("/testChanges")
+  @Get("/get-hola")
   async getHola() {
     return "hola todo funciona!!!";
   }
