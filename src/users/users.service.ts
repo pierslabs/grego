@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -23,6 +24,13 @@ export class UsersService {
   logger = new Logger('User Service');
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    const existUser = await this.findOneByEmail(createUserDto.email);
+
+    if (existUser)
+      throw new ConflictException(
+        'The user you are trying to register already exists 👮',
+      );
+
     try {
       const salt = await bcrypt.genSalt(10);
       const hashPassword = bcrypt.hashSync(createUserDto.password, salt);

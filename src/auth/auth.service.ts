@@ -36,7 +36,7 @@ export class AuthService {
       return user;
     } catch (error) {
       this.logger.error('💣', error);
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(error.message);
     }
   }
 
