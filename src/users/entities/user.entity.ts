@@ -1,1 +1,43 @@
-export class User {}
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  userId: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ type: 'text', array: true, default: ['user'] })
+  roles: string[];
+
+  @CreateDateColumn({ type: 'timestamp with time zone' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp with time zone' })
+  updatedAt: Date;
+
+  @BeforeInsert()
+  checkfieldsBeforeInsert() {
+    this.email = this.email.toLowerCase().trimEnd();
+  }
+
+  @BeforeUpdate()
+  checkfieldsBeforeUpdate() {
+    this.checkfieldsBeforeInsert();
+  }
+}
