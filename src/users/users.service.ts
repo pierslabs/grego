@@ -24,12 +24,9 @@ export class UsersService {
   logger = new Logger('User Service');
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const existUser = await this.findOneByEmail(createUserDto.email);
-
-    if (existUser)
-      throw new ConflictException(
-        'The user you are trying to register already exists 👮',
-      );
+    await this.userRepository.findOneBy({
+      email: createUserDto.email,
+    });
 
     try {
       const salt = await bcrypt.genSalt(10);
