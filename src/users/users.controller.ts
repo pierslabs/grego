@@ -11,6 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { User } from './entities/user.entity';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -30,8 +31,13 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<User> {
+    return this.usersService.findOne(id);
+  }
+
+  @Get('email/:email')
+  async findOneByEmail(@Param('email') email: string): Promise<User> {
+    return this.usersService.findOneByEmail(email);
   }
 
   @Patch(':id')

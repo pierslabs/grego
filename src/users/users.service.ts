@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -41,8 +42,18 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ userId: id });
+    if (!user) throw new NotFoundException('User not found 🔍');
+
+    return user;
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOneByOrFail({ email });
+    if (!user) throw new NotFoundException('User not found ❌🔍');
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
