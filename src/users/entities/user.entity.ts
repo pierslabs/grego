@@ -22,6 +22,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
+
   @Column({ type: 'text', array: true, default: ['user'] })
   roles: string[];
 
