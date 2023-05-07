@@ -7,12 +7,13 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common';
 
-import { User } from 'src/users/entities/user.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthReponse } from './types/authResponse';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -54,8 +55,17 @@ export class AuthService {
     }
   }
 
-  // TODO
-  // revalidateToken() {
-  //   return `This action {revalidate} returns new token`;
-  // }
+  async validateUser(id: string): Promise<User> {
+    const user = await this.usersService.findOne(id);
+    if (!user.isActive)
+      throw new UnauthorizedException('User is inactive, talk with admin 👮‍♂️');
+
+    delete user.password;
+
+    return user;
+  }
+
+  revalidateToken() {
+    return `This action {revalidate} returns new token`;
+  }
 }
