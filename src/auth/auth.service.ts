@@ -34,8 +34,10 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password))
       throw new BadRequestException('Email or Password are incorrect');
 
+    const token = this.getJwtToken(user.userId);
+
     return {
-      token: '1234',
+      token,
     };
   }
 
