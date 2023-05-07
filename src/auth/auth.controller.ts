@@ -8,6 +8,7 @@ import { AuthReponse } from './types/authResponse';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
+import { ValidRoles } from './enums/roles.enum';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -27,7 +28,9 @@ export class AuthController {
   @Get('revalidate')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  revalidateToken(@CurrentUser() user: User): Promise<AuthReponse> {
+  revalidateToken(
+    @CurrentUser(/**[ValidRoles.admin]*/) user: User,
+  ): Promise<AuthReponse> {
     return this.authService.revalidateToken(user);
   }
 }
