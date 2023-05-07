@@ -6,6 +6,8 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthReponse } from './types/authResponse';
 import { AuthGuard } from '@nestjs/passport';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from 'src/users/entities/user.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,7 +27,7 @@ export class AuthController {
   @Get('revalidate')
   @ApiBearerAuth()
   @UseGuards(AuthGuard())
-  revalidateToken() {
-    return this.authService.revalidateToken();
+  revalidateToken(@CurrentUser() user: User): Promise<AuthReponse> {
+    return this.authService.revalidateToken(user);
   }
 }

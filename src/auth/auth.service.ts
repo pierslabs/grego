@@ -65,7 +65,9 @@ export class AuthService {
     return user;
   }
 
-  revalidateToken() {
-    return `This action {revalidate} returns new token`;
+  async revalidateToken(user: User): Promise<AuthReponse> {
+    const token = this.getJwtToken(user.userId);
+
+    return { token };
   }
 }
