@@ -24,12 +24,11 @@ export class UserRoleGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
 
     const user = req.user;
-    console.log(user);
+
     if (!user) throw new BadRequestException('User not found 💂‍♂️');
 
     for (const role of user.roles) {
       if (validRoles.includes(role)) {
-        console.log('entra');
         return true;
       }
     }
