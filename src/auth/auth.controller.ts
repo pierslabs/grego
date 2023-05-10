@@ -1,4 +1,11 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  SetMetadata,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -9,6 +16,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { ValidRoles } from './enums/roles.enum';
+import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { RoleProtected } from './decorators/role-protected.decorator';
+import { Auth } from './decorators/auth-decorator.ts.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -32,5 +42,12 @@ export class AuthController {
     @CurrentUser(/**[ValidRoles.admin]*/) user: User,
   ): Promise<AuthReponse> {
     return this.authService.revalidateToken(user);
+  }
+
+  @Get('private')
+  @ApiBearerAuth()
+  @Auth(ValidRoles.user)
+  private(@CurrentUser() user: User) {
+    return user;
   }
 }
