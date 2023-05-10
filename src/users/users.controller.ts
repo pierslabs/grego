@@ -12,6 +12,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { Auth } from 'src/auth/decorators/auth-decorator.ts.decorator';
+import { ValidRoles } from 'src/auth/enums/roles.enum';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -26,6 +28,7 @@ export class UsersController {
   }
 
   @Get()
+  @Auth(ValidRoles.superUser)
   findAll() {
     return this.usersService.findAll();
   }
