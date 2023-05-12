@@ -52,4 +52,23 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
+
+  // `/change-password` (POST): Permite al usuario cambiar su contraseña después de autenticarse.
+  @Post('change-password')
+  async changePassword(@Body() changePassword: string): Promise<string> {
+    return await this.usersService.changePassword(changePassword);
+  }
+
+  // `/change-email` (POST): Permite al usuario cambiar su dirección de correo electrónico después de autenticarse.
+
+  @Post('change-email')
+  async changeEmail(@Body() changeEmail: string): Promise<string> {
+    return await this.usersService.changeEmail(changeEmail);
+  }
+
+  // `/user-profile` (GET): Obtiene los detalles del perfil del usuario autenticado.
+  @Get('user-profile')
+  async userProfile(): Promise<string> {
+    return await this.usersService.userProfile();
+  }
 }

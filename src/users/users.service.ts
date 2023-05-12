@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -67,6 +66,18 @@ export class UsersService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async changePassword(changePassword: string): Promise<string> {
+    return 'This action changes a password';
+  }
+
+  async changeEmail(changeEmail: string): Promise<string> {
+    return 'This action changes a email';
+  }
+
+  async userProfile(): Promise<string> {
+    return 'This action returns a user profile';
   }
 
   private handleDBErrors = (error: any): never => {
