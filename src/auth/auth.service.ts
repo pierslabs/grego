@@ -65,9 +65,42 @@ export class AuthService {
     return user;
   }
 
-  async revalidateToken(user: User): Promise<AuthReponse> {
-    const token = this.getJwtToken(user.userId);
+  async logout(user: User): Promise<User> {
+    return user;
+  }
 
+  async refresh(user: User): Promise<AuthReponse> {
+    const token = this.getJwtToken(user.userId);
     return { token };
+  }
+
+  async validateToken(token: string): Promise<boolean> {
+    try {
+      const isValid = this.jwtService.verify(token).id ? true : false;
+      return isValid;
+    } catch (error) {
+      this.logger.error('💣 invalid token ', error);
+      throw new UnauthorizedException('Invalid Token');
+    }
+  }
+
+  // TODO: implement this methods
+  async forgotPassword(email: string): Promise<string> {
+    return 'forgotPassword: ' + email;
+  }
+
+  async resetPassword(email: string): Promise<string> {
+    this.logger.log('resetPassword', email);
+    return 'resetPassword';
+  }
+
+  async verifyEmail(email: string): Promise<string> {
+    this.logger.log('verifyEmail', email);
+    return 'verifyEmail';
+  }
+
+  async revokeToken(token: string): Promise<string> {
+    this.logger.log('revokeToken', token);
+    return 'revokeToken';
   }
 }

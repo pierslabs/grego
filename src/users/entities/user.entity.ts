@@ -13,13 +13,16 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   userId: string;
 
-  @Column()
+  @Column({ type: 'text' })
   name: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'text', unique: true })
   email: string;
 
-  @Column()
+  @Column({ type: 'boolean', default: false })
+  verifyEmail: boolean;
+
+  @Column({ type: 'text' })
   password: string;
 
   @Column({ type: 'boolean', default: true })
@@ -27,6 +30,9 @@ export class User {
 
   @Column({ type: 'text', array: true, default: ['user'] })
   roles: string[];
+
+  @Column({ type: 'text', nullable: true })
+  token?: string;
 
   @CreateDateColumn({ type: 'timestamp with time zone' })
   createdAt: Date;
