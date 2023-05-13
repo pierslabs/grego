@@ -3,6 +3,7 @@ import {
   BeforeUpdate,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -39,6 +40,9 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamp with time zone' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp with time zone' })
+  deletedAt?: Date;
 
   @BeforeInsert()
   checkfieldsBeforeInsert() {

@@ -42,8 +42,13 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<User[]> {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      this.logger.error(`💣 ${error}`);
+      this.handleDBErrors(error);
+    }
   }
 
   async findOne(id: string): Promise<User> {
@@ -60,24 +65,62 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOneBy({ userId: id });
+    if (!user) throw new NotFoundException('User not found 🔍');
+    const salt = await bcrypt.genSalt(10);
+
+    if (updateUserDto.password) {
+      updateUserDto.password = bcrypt.hashSync(updateUserDto.password, salt);
+    }
+
+    try {
+      const updateUser = await this.userRepository.preload({
+        ...user,
+        ...updateUserDto,
+      });
+
+      return await this.userRepository.save(updateUser);
+    } catch (error) {
+      this.logger.error(`💣 ${error}`);
+      this.handleDBErrors(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string): Promise<void> {
+    const user = await this.userRepository.findOneBy({ userId: id });
+    if (!user) throw new NotFoundException('User not found 🔍');
+    try {
+      await this.userRepository.softDelete(id);
+    } catch (error) {
+      this.logger.error(`💣 ${error}`);
+      this.handleDBErrors(error);
+    }
   }
 
-  async changePassword(changePassword: string): Promise<string> {
-    return 'This action changes a password';
+  async changePassword(user: User, password: string): Promise<User> {
+    const { userId } = user;
+
+    const userUpdate = await this.update(userId, {
+      password: password,
+    });
+    delete userUpdate.password;
+    delete userUpdate.token;
+    return userUpdate;
   }
 
-  async changeEmail(changeEmail: string): Promise<string> {
-    return 'This action changes a email';
+  async changeEmail(user: User, changeEmail: string): Promise<User> {
+    const { userId } = user;
+    const userUpdate = await this.update(userId, {
+      email: changeEmail,
+    });
+    delete userUpdate.password;
+    delete userUpdate.token;
+    return userUpdate;
   }
 
-  async userProfile(): Promise<string> {
-    return 'This action returns a user profile';
+  async userProfile(user: User): Promise<any> {
+    return user;
   }
 
   private handleDBErrors = (error: any): never => {
