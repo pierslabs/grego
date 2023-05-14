@@ -2,13 +2,13 @@ import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthReponse } from './types/authResponse';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { ValidRoles } from './enums/roles.enum';
-import { Auth } from './decorators/auth-decorator.ts.decorator';
+import { Auth } from './decorators/auth-decorator';
 
 type Token = {
   token: string;

@@ -13,9 +13,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
-import { Auth } from 'src/auth/decorators/auth-decorator.ts.decorator';
-import { ValidRoles } from 'src/auth/enums/roles.enum';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { Auth } from '../auth/decorators/auth-decorator';
+import { ValidRoles } from '../auth/enums/roles.enum';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -102,7 +102,6 @@ export class UsersController {
     user: User,
     @Body('changeEmail') changeEmail: string,
   ): Promise<User> {
-    console.log(changeEmail);
     return await this.usersService.changeEmail(user, changeEmail);
   }
 }
